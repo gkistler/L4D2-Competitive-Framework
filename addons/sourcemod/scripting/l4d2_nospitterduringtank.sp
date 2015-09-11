@@ -2,7 +2,7 @@
 2.0 - Griffin
 
 More or less cribbed tankdamageannounce's tank tracking, which itself is
-heavily based off of ZACK/Rotoblin by Mr Zero
+heavily based off of ZACK/Rotoblin.  Credit to Mr Zero.
 
 This is in response to the following L4D Nation thread:
 http://www.l4dnation.com/confogl-and-other-configs/low-hanging-fruit/60/
@@ -85,7 +85,6 @@ public OnMapStart()
 	// protect from those scenarios.
 	if (g_iSpitterLimit > 0 && GetConVarInt(g_hSpitterLimit) == 0)
 	{
-		PrintToChatAll("[DEBUG] Resetting spitter limit to original value.");
 		SetConVarInt(g_hSpitterLimit, g_iSpitterLimit);
 	}
 }
@@ -93,7 +92,6 @@ public OnMapStart()
 public OnClientDisconnect_Post(client)
 {
 	if (!g_bIsTankInPlay || client != g_iTankClient) return;
-	PrintToChatAll("[DEBUG] Tank client kicked");
 	// Use a delayed timer due to bugs where the tank passes to another player
 	CreateTimer(0.5, Timer_CheckTank, client);
 }
@@ -117,7 +115,6 @@ public Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 
 	if (g_bIsTankInPlay) return; // Tank passed
 
-	PrintToChatAll("[DEBUG] Disabling spitters.");
 	g_bIsTankInPlay = true;
 	SetConVarInt(g_hSpitterLimit, 0);
 }
@@ -128,7 +125,6 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 	g_iTankClient = 0;
 	if (g_iSpitterLimit > 0 && GetConVarInt(g_hSpitterLimit) == 0)
 	{
-		PrintToChatAll("[DEBUG] Resetting spitter limit to original value.");
 		SetConVarInt(g_hSpitterLimit, g_iSpitterLimit);
 	}
 }
@@ -140,7 +136,6 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 	g_bIsTankInPlay = false;
 	if (g_iSpitterLimit > 0 && GetConVarInt(g_hSpitterLimit) == 0)
 	{
-		PrintToChatAll("[DEBUG] Resetting spitter limit to original value.");
 		SetConVarInt(g_hSpitterLimit, g_iSpitterLimit);
 	}
 }
@@ -162,7 +157,6 @@ public Action:Timer_CheckTank(Handle:timer, any:oldtankclient)
 	g_bIsTankInPlay = false;
 	if (g_iSpitterLimit > 0 && GetConVarInt(g_hSpitterLimit) == 0)
 	{
-		PrintToChatAll("[DEBUG] Resetting spitter limit to original value.");
 		SetConVarInt(g_hSpitterLimit, g_iSpitterLimit);
 	}
 }
@@ -177,7 +171,7 @@ FindTankClient()
 			GetEntProp(client, Prop_Send, "m_zombieClass") != g_iZombieClass_Tank)
 			continue;
 
-		return client; // Found tank, return
+		return client;
 	}
 	return 0;
 }
@@ -187,4 +181,3 @@ public OnPluginEnd()
 	if (g_iSpitterLimit > 0 && GetConVarInt(g_hSpitterLimit) == 0)
 		SetConVarInt(g_hSpitterLimit, g_iSpitterLimit);
 }
-
